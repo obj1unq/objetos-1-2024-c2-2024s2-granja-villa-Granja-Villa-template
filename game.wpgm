@@ -1,8 +1,10 @@
 import wollok.game.*
 import hector.*
 import cultivos.*
+import aspersor.*
+import mercados.*
 
-program farmville {
+program farmville { 
 	//  CONFIG	
 	game.title("La granja de Héctor")
 	game.height(10)
@@ -10,9 +12,35 @@ program farmville {
 	game.ground("ground.png")
 
 	//  VISUALES
- 	game.addVisualCharacter(hector)
- 	game.addVisual(new Maiz()) // Se agrega a modo de prueba
- 	
+	granja.mercadoEn(game.at(11,9))
+	granja.mercadoEn(game.at(9,9))
+	granja.mercadoEn(game.at(1,7))
+ 	game.addVisual(hector)
+
+
+	keyboard.right().onPressDo({hector.mover(derecha)})
+	keyboard.up().onPressDo({hector.mover(arriba)})
+	keyboard.down().onPressDo({hector.mover(abajo)})
+	keyboard.left().onPressDo({hector.mover(izquierda)})
+
+	// ACCIONES
+	keyboard.m().onPressDo(
+		{hector.plantar(new Maiz(position = hector.position()))})
+
+	keyboard.t().onPressDo(
+		{hector.plantar(new Trigo(position = hector.position()))})
+
+	keyboard.o().onPressDo(
+		{hector.plantar(new Tomaco(position = hector.position()))})
+	
+	keyboard.a().onPressDo({hector.colocarORemoverAspersor()})
+
+	keyboard.r().onPressDo({hector.regar()})
+	keyboard.c().onPressDo({hector.cosechar()})
+	keyboard.v().onPressDo({hector.venderleAMercado()})
+ 	keyboard.space().onPressDo({game.say(hector, hector.plantasYOro())})
+	
+	
  	//  COMIENZA
 	game.start()
 }

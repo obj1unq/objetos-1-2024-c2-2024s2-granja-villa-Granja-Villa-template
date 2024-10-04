@@ -1,9 +1,58 @@
-import example.pepita
+import aspersor.*
+import cultivos.*
+import hector.*
+import wollok.game.*
+import mercados.*
 
-describe "group of tests for pepita" {
+describe "test granja villa" {
+    method initialize() {
+        
+	    game.height(10)
+	    game.width(10)
+	    granja.mercadoEn(game.at(11,9))
+	    granja.mercadoEn(game.at(9,9))
+	    granja.mercadoEn(game.at(1,7))
+ 	    game.addVisual(hector)
+    }
 
-  test "pepita has initial energy" {
-    assert.equals(100, pepita.energy())
-  }
+    test "hector pone una semilla de cada planta, las riega y luego las cosecha" {
 
+        hector.plantar(new Maiz(position = hector.position()))
+        hector.regar()
+        hector.cosechar()
+        assert.equals(1, hector.plantasObtenidas())
+
+        hector.plantar(new Trigo(position = hector.position()))
+        hector.regar()
+        hector.regar()
+        hector.regar()
+        hector.cosechar()
+        assert.equals(2, hector.plantasObtenidas())
+
+        hector.plantar(new Tomaco(position = hector.position()))
+        hector.cosechar()
+        assert.equals(3, hector.plantasObtenidas())
+    }
+
+    test "hector cosecha una planta y la vende en el mercado" {
+    
+        hector.plantar(new Tomaco(position = hector.position()))
+        hector.cosechar()
+        hector.position(game.at(11,9))
+        hector.venderleAMercado()
+
+        assert.equals(80, hector.monedas())
+        assert.equals(920, game.uniqueCollider(hector).dinero())
+    }
+
+    test "hector pone un aspersor, el aspersor riega y el maíz crece" {
+        hector.plantar(new Maiz(position = hector.position()))
+        hector.mover(derecha)
+        hector.colocarORemoverAspersor()
+        granja.aspersores().uniqueElement().regar()
+        hector.mover(izquierda)
+        hector.cosechar()
+
+        assert.equals(1, hector.plantasObtenidas())
+    }
 }
